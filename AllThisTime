@@ -1,0 +1,460 @@
+#!/usr/bin/env python3
+
+import sys
+
+import os
+
+import time 
+
+from pydub import AudioSegment
+from pydub.utils import make_chunks
+from pyaudio import PyAudio
+from threading import Thread
+
+from contextlib import contextmanager,redirect_stderr,redirect_stdout
+from os import devnull
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+@contextmanager
+def suppress_stdout_stderr():
+    """A context manager that redirects stdout and stderr to devnull"""
+    with open(devnull, 'w') as fnull:
+        with redirect_stderr(fnull) as err, redirect_stdout(fnull) as out:
+            yield (err, out)
+
+
+class Song(Thread):
+
+    def __init__(self, f, *args, **kwargs):
+        self.seg = AudioSegment.from_file(f)
+        self.__is_paused = True
+        self.p = PyAudio()
+        Thread.__init__(self, *args, **kwargs)
+        self.start()
+
+    def pause(self):
+        self.__is_paused = True
+
+    def play(self):
+        self.__is_paused = False
+
+    def __get_stream(self):
+        return self.p.open(format=self.p.get_format_from_width(self.seg.sample_width),
+                           channels=self.seg.channels,
+                           rate=self.seg.frame_rate,
+                           output=True)
+
+    def run(self):
+        stream = self.__get_stream()
+        chunk_count = 0
+        chunks = make_chunks(self.seg, 100)
+        while chunk_count <= len(chunks):
+            if not self.__is_paused:
+                data = (chunks[chunk_count])._data
+                chunk_count += 1
+            else:
+                free = stream.get_write_available()
+                data = chr(0)*free
+            stream.write(data)
+
+        stream.stop_stream()
+        self.p.terminate()
+
+song = Song("./.allthistimesong.flac")
+os.system('clear')
+
+print("new-album:solid-state jonathancoulton$ ", end="", flush=True)
+
+time.sleep(2)
+print("l", end="", flush=True)
+time.sleep(0.25)
+print("s", flush=True)
+time.sleep(0.2)
+print("AirToGroundActions                    FighterCombat")
+print("AllThisTime                           GinRummy     ")
+print("BlackJack                             GlobalThermonuclearWar")
+print("Bridge                                GuerillaEngagment")
+print("Checkers                              Hearts")
+print("Chess                                 Poker        ")
+print("DesertWarfare                         TheaterwideBiotoxicAndChemicalWarfare")
+print("Falken'sMaze                          TheaterwideTacticalWarefare")
+
+print("new-album:solid-state jonathancoulton$ ", end="", flush=True)
+time.sleep(2)
+
+sas = "./"
+for i in sas:
+    print(i, end="", flush=True)
+    time.sleep(0.25)
+time.sleep(0.5)
+
+sas = "AllThisTime"
+for i in sas:
+    print(i, end="", flush=True)
+    time.sleep(0.20)
+print()
+time.sleep(0.2)
+os.system('clear')
+
+
+
+print("**********************************************************")
+print("**********************************************************")
+print()
+print()
+print("  __   _  _    _____  _    _      _____  _")
+print(" (  ) ( )( )  (_   _)( )  (_)    (_   _)(_)")
+print(" /o \ | || |    | |  | |_  _  __   | |   _  __  __  ___")
+print("( __ )( )( )    ( )  ( _ )( )(_    ( )  ( )( _\/_ )( o_)")
+print("/_\/_\/_\/_\    /_\  /_\||/_\/__)  /_\  /_\/_\  /_\ \( ")
+print()
+print("**********************************************************")
+print("**********************************************************")
+
+print()
+print()
+print()
+print()
+
+
+print("All This Time")
+print("A Text Adventure Game")
+print("Copyright (c) 2017 Jonathan Coulton Inc., All rights reserved.")
+print("Revision 79 / Serial number 58784")
+
+time.sleep(6)
+
+os.system('clear')
+
+def user_input(s, in_delay, type_delay, a=True):
+    print(">", end="", flush=True)
+    time.sleep(in_delay)
+    for c in s:
+        print(c, end="", flush=True)
+        time.sleep(float(type_delay / len(s)))
+    if(a):
+        print(flush=True)
+
+print("You are in a factory.\n")
+
+time.sleep(3)
+
+print("It's an enormous room. If there are walls, they're too far away for you to make out. You assume there is a ceiling somewhere above you, but when you look up, you see only an impenetrable darkness.\n")
+
+time.sleep(3)
+
+print("In front of you is a short CONVEYOR BELT that stretches between two columns. There are other people standing at similiar conveyor belts all around you, in all directions, as far as the eye can see.\n")
+
+time.sleep(3)
+
+print("In your hand is a PICTURE OF THE MOON.\n")
+
+user_input("take picture", 4, 1)
+print("You can't take the PICTURE OF THE MOON because you already have it.\n")
+
+user_input("look picture", 5, 0.7)
+print("You look at the PICTURE OF THE MOON. It is a picture of the moon.\n")
+
+user_input("examine picture", 3, 1)
+print("You see nothing special about the PICTURE OF THE MOON. It is a picture of the moon.\n")
+
+user_input("rip picture", 3, 0.7)
+print("You can't do that right now.")
+user_input("eat picture", 1, 0.6)
+print("You can't do that right now.\n")
+
+user_input("argha sadfa dfjkadgjlkadg", 3, 1)
+print("I don't understand \"argha aadfa dfjkadgjlkadg.\"\n")
+
+time.sleep(2)
+print("(There is a conveyor belt though. It is stopped.)\n")
+
+user_input("start conveyor belt", 4, 1.2)
+print(".")
+time.sleep(1.3)
+print("..")
+time.sleep(1.2)
+print("...\n")
+
+print("A WIDGET emerges from a hole in the left column. It moves along the conveyor belt and stops in front of you.\n")
+song.play()
+
+user_input("take widget", 3, 0.75)
+print("You can't take the WIDGET\n");
+
+user_input("look widget", 2, 12.64 - 11.93)
+print("You see nothing special about the WIDGET. It is a widget.\n");
+
+user_input("e", 14.79 - 12.64, 14.96 - 14.79)
+print("There are people at conveyor belts as far as the eye can see.\n");
+
+user_input("n", 16.91 - 14.96, 17.4 - 16.91)
+print("There are people at conveyor belts as far as the eye can see.\n");
+
+user_input("w", 18.15 - 17.4, 18.56 - 18.19)
+print("There are people at conveyor belts as far as the eye can see.\n");
+
+user_input("s", 19.35 - 18.56, 19.51 - 19.35)
+print("There are people at conveyor belts as far as the eye can see.\n");
+
+user_input("quit", 23.58 - 19.51, 23.95 - 23.58)
+print("You can't quit now! You haven't processed enough widgets yet!\n");
+
+user_input("process widget", 27.02 - 23.95, 27.97 - 27.02)
+print("You process the WIDGET. You earn 8 CREDITS! Another WIDGET appears.\n")
+
+user_input("process widget", 30.13 - 27.97, 30.92 - 30.13)
+print("You process the WIDGET. You earn 8 CREDITS! Another WIDGET appears.\n")
+
+user_input("process widget", 32 - 30.92, 33 - 32)
+print("You process the WIDGET. You earn 8 CREDITS! Another WIDGET appears.\n")
+
+user_input("boring", 34.07 - 33, 34.44 - 34.07)
+print("I know, right?\n")
+
+user_input("wtf", 37.51 - 34.44, 37.85 - 37.51)
+print("I don't undertand \"wtf.\"\n")
+
+user_input("process all widgets", 43 - 37.85, 44.15 - 43)
+print("You mindlessly process widgets. Your thoughts begin to wander.\n")
+
+time.sleep(46.39 - 44.15)
+print("You think about what entertainment you will watch when you return to your pod's domicile.\n")
+
+time.sleep(49.46 - 46.39)
+print("You notice a SWITCH on the wall that's labeled \"Destroy.\" Next to it are three empty SLOTS that look like they hold CIRCUIT BOARDS.\n")
+
+time.sleep(53.6 - 49.46)
+print("OMG, you stopped processing WIDGETS and your ROBOT SUPERVISOR is right behind you!\n")
+
+user_input("process widget", 56.63 - 53.6, 57.46 - 56.63)
+print("Too late! Your ROBOT SUPERVISOR grips your sholder. \"Hey there buddy!,\" he says, \"Seems like you got a little distracted! Maybe time to take a RED PILL!\"\n")
+
+user_input("eat red pill", 2.56 + 60 - 57.46, 3.23 - 2.56)
+print("You eat the RED PILL. Now you're energized! Let's process some WIDGETS!\n")
+
+user_input("process all widgets", 5.3 - 3.23, 6.5 - 5.3)
+print("You mindlessly process WIDGETS. Your ROBOT SUPERVISOR sighs. \"Good job buddy. You're really earning some credits I guess.\"\n")
+
+user_input("count credits", 11.6 - 6.5, 12.43 - 11.6)
+print("You have 128 credits! You're going to watch the HECK out of an entertainment when you return to your pod's domicile tonight!\n")
+
+user_input("look", 16.5 - 12.43, 16.87 - 16.5)
+print("You idly look at stuff. There is is. Bunch of stuff.\n")
+
+time.sleep(19.11 - 16.87)
+print("Your ROBOT SUPERVISOR sighs again, but this time it comes out as a little moan.\n")
+
+user_input("look robot supervisor", 23.09 - 19.11, 24.29 - 23.09)
+print("Your ROBOT SUPERVISOR looks miserable. He stares bleakly into the middle distance.\n")
+
+user_input("help robot supervisor", 28.4 - 24.29, 29.81 - 28.4)
+print("You can't do that right now.\n")
+
+user_input("what's wrong", 31.83 - 29.81, 32.62 - 31.83)
+print("I don't understand \"what's wrong.\"\n")
+
+user_input("show robot supervisor picture of moon", 35.7 - 32.62, 38.14 - 35.7)
+print("Your ROBOT SUPERVISOR sees the PICTURE OF THE MOON and immediately begins to cry. He sings a little tune.\n")
+
+time.sleep(40.35 - 38.14)
+print("All we'll have is")
+time.sleep(42.45 - 40.35)
+print("All this time")
+time.sleep(45.56 - 42.45)
+print("All we'll have is")
+time.sleep(47.72 - 45.56)
+print("All this time\n")
+
+time.sleep(53 - 47.72)
+print("Your ROBOT SUPERVISOR blows his nose. Looking up at a security camera, he says loudly, \"Now get back to those widgets!\" He smiles with a faraway look in his eyes and whispers to you, \"I've never seen the moon.\"\n")
+
+time.sleep(59 - 53)
+print("He hands you a BLUE PILL and winks.")
+
+user_input("eat blue pill", 1.86 + 60 - 59, 2.77 - 1.86)
+print(f"{bcolors.OKBLUE}W H O A\n.")
+time.sleep(3.73 - 2.77)
+print("..")
+time.sleep(4.77 - 3.73)
+print("...")
+
+time.sleep(5.85 - 4.77)
+print("WTF seriously dude. You feel GREAT, just, like, super fuzzy but chill? And you're all, sort of, ITCHY, but in your TEETH?\n")
+
+time.sleep(10.04 - 5.85)
+print("Your ROBOT SUPERVISOR makes that \"hang loose\" gesture and leans back. \"Hey buddy, check this out.\"\n")
+
+time.sleep(14.14 - 10.04)
+print("A panel on his chest slides open. There are three CIRCUIT BOARDS that look like they might fit in some SLOTS next to a DESTROY SWITCH.\n")
+
+time.sleep(18.29 - 14.14)
+print("They are labeled FEELINGS, SENSE OF SELF, and WILL TO LIVE.\n")
+
+time.sleep(21.45 - 18.29)
+print("It's a good thing you're high on BLUE PILL, because removing these CIRCUIT BOARDS from your ROBOT SUPERVISOR's chest will probably kill him.\n")
+
+time.sleep(24.52 - 21.45)
+print("The effects of the BLUE PILL are wearing off.\n")
+
+time.sleep(25.56 - 24.52)
+print("...")
+
+time.sleep(26.55 - 25.56)
+print(f"{bcolors.ENDC}..")
+
+time.sleep(27.55 - 26.55)
+print(".")
+
+time.sleep(28.71 - 27.55)
+print("Uh oh.")
+
+user_input("take feelings", 31.63 - 28.71, 32.67 - 31.63)
+print("You take his FEELINGS.  I mean, he's a robot, right? They're probably not even real feelings.\n")
+
+user_input("take sense of self", 36.78 - 32.67, 38.06 - 36.78)
+print("Sure, why not? You take, and you take, and you take. Because you're a winner.\n")
+
+time.sleep(41.26 - 38.06)
+print("Your ROBOT SUPERVISOR winces. Wait, do they feel pain?\n")
+
+user_input("take", 43.25 - 41.26, 44.82 - 43.25, a=False)
+time.sleep(46.86 - 44.82)
+for i in range(4):
+    print("\b \b", end="", flush=True)
+    time.sleep((47.56 - 46.86) / 4)
+
+time.sleep(49.78 - 47.56)
+print("\nCOME ON. DO IT.\n")
+
+user_input("take will to live", 53.81 - 49.78, 54.97 - 53.81)
+print("Wow. OK, but this may kill your ROBOT SUPERVISOR. Are you sure? (y/n)\n")
+
+user_input("n", 57.08 - 54.97, 57.12 - 57.08)
+print("Too bad. Some decisions are hard. You take your ROBOT SUPERVISOR's WILL TO LIVE. You hear the hum of his inner workings stutter and slow.\n")
+
+time.sleep(1.35 + 60 - 57.12)
+print("He won't last long now\n")
+
+user_input("put feelings into slot next to destroy switch", 3.34 - 1.35, 6.21 - 3.34)
+print("You can't put FEELINGS there.\n")
+
+user_input("get feelings", 8.32 - 6.21, 8.94 - 8.32)
+print("You already have FEELINGS.\n")
+
+time.sleep(10.19 - 8.94)
+print("Your ROBOT SUPERVISOR coughs. His eyes are vacant, glassy.\n")
+
+user_input("put circiut boarfs into slots", 12.18 - 10.19, 13.92 - 12.18)
+print("I don't understand \"put circiut boarfs into slots.\"\n")
+
+user_input("circuit boards", 15.03 - 13.92, 16.19 - 15.03)
+print("What do you want to do with the CIRCUIT BOARDS?\n")
+
+user_input("put ciruci boards intos laots", 17.27 - 16.19, 19.14 - 17.27)
+print("I don't understand \"put ciruci boards intos laots.\"\n")
+
+
+user_input("fuafskdksasa", 20.22 - 19.14, 20.92 - 20.22)
+print("OK buddy, you sound really frustrated. Slow it down.\n")
+
+user_input("put circuit boards into slots", 24.02 - 20.92, 25.94 - 24.02)
+print("I don't understand \"put circuit boards into slots.\"\n")
+
+user_input("WHAT", 29 - 25.94, 29.26 - 29)
+print("What?\n")
+
+time.sleep(31.5 - 29.26) 
+print("Your ROBOT SUPERVISOR's legs fail. He crumples to the floor and looks up wth sad resignation. \"That's OK buddy, you tried,\" he says.\n")
+
+user_input("just, please", 34.38 - 31.5, 35.23 - 34.38)
+time.sleep(38.59 - 35.23)
+print("OK\n")
+
+time.sleep(39.71 - 38.59)
+print("You put the CIRCUIT BOARDS into their SLOTS and push the DESTROY SWITCH.\n")
+
+time.sleep(41.86 - 39.71)
+print("A low rumble shakes the floor. You hear the shriek of tearing metal. Chunks of concrete and glass fall from high above, blanketing people, conveyor belts, widgets.\n")
+
+time.sleep(46.96 - 41.86)
+print("A hiss of depressurization, and you feel the kiss of cold air from outside\n")
+
+time.sleep(49.08 - 46.96)
+print("Your ROBOT SUPERVISOR lies flat on his back, each breath rattling in his broken chest.\n")
+
+time.sleep(52.19 - 49.08)
+print("As the dust clears, you see the ceiling is gone. The moon is high and full in the night sky.\n")
+
+time.sleep(55.3 - 52.19)
+print("There is still a fading light in your ROBOT SUPERVISOR's eyes, which are now wide, and full of wonder and gratitude.\n")
+
+time.sleep(58.33 - 55.3)
+
+def moon_print(s):
+    print(s)
+    time.sleep(0.12)
+
+moon_print("                .                                                    ÷                                                                  ")
+moon_print("        ÷            *                  .      *                                    .                         .                   *     ")
+moon_print("                         ÷                           *                      ÷               .       ÷              .     .              ")
+moon_print("    *        .                        *                                                                                    *            ")
+moon_print("                                             .        ÷                  .                             *                                ")
+moon_print("       *            *                                                                          *                                        ")
+moon_print("                                                                                                .        .         *        .     *     ")
+moon_print("   .       .                       ÷                          .                                                                         ")
+moon_print("                                                                             ÷                                                          ")
+moon_print("                                                 .                                                               .                      ")
+moon_print("               .                                                                                          .              *              ")
+moon_print("                                                                                                                               *        ")
+moon_print("                                                               *        *                       *                .                      ")
+moon_print("                      ÷                                 ÷                                                  .                            ")
+moon_print("                                     .                                                                                                  ")
+moon_print("            .                                                                 .....              .                          ÷           ")
+moon_print("                                                  ÷                       _d^^^^^^^^^b_                                                 ")
+moon_print("                             *                                         .d'' .   .-.   ''b.                            ÷                 ")
+moon_print("                 *                                      .            .p'       (   )     'q.           .                        .       ")
+moon_print("                                    *                               .d'   ()    '-'       'b.                                           ")
+moon_print("         .                                                         .d'  .            0  .  'b.               ..                         ")
+moon_print("                                         *                         ::       o               ::                 . .                      ")
+moon_print("                                                                   ::  ()         .      .  ::                 .                        ")
+moon_print("                      *                                ÷      *    ::     .--.              ::                                          ")
+moon_print("        .                      ÷                                   'p.   |    |       0    .q'                                          ")
+moon_print("                                           *                        'p.  '.__.'    ()     .q'         ÷                                 ")
+moon_print("               .     .                                    *          'b.                 .d'  .                            .            ")
+moon_print("     .                      ÷                                          'q..   o     .  ..p'                                             ")
+moon_print("                                                                          ''..........''                    *                           ")
+moon_print("                                       *                                       ````                                       .             ")
+moon_print("                             ÷                                            .                                                             ")
+moon_print("    .                                                                                         *                                         ")
+moon_print("              *                                          .                                             .      ÷                         ")
+moon_print("                                                                                .                                                       ")
+moon_print("                                        .                                                                                          .    ")
+moon_print("                                                                 *                                                     *                ")
+moon_print("                    .                                                                                                                   ")
+moon_print("                                                                                                                                        ")
+
+time.sleep(10)
+song.pause()
+time.sleep(5)
+
+os.system('clear')
+
+printf("Song and story comes from Johnathan Coulton")
+time.sleep(1)
+printf("Created By: Albert Lee")
+time.sleep(1)
+printf("Thank you for watching!")
+time.sleep(3)
+
+sys.exit()
