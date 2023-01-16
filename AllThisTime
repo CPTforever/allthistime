@@ -118,6 +118,7 @@ print(" /o \ | || |    | |  | |_  _  __   | |   _  __  __  ___")
 print("( __ )( )( )    ( )  ( _ )( )(_    ( )  ( )( _\/_ )( o_)")
 print("/_\/_\/_\/_\    /_\  /_\||/_\/__)  /_\  /_\/_\  /_\ \( ")
 print()
+print()
 print("**********************************************************")
 print("**********************************************************")
 
@@ -280,7 +281,7 @@ time.sleep(53 - 47.72)
 print("Your ROBOT SUPERVISOR blows his nose. Looking up at a security camera, he says loudly, \"Now get back to those widgets!\" He smiles with a faraway look in his eyes and whispers to you, \"I've never seen the moon.\"\n")
 
 time.sleep(59 - 53)
-print("He hands you a BLUE PILL and winks.")
+print("He hands you a BLUE PILL and winks.\n")
 
 user_input("eat blue pill", 1.86 + 60 - 59, 2.77 - 1.86)
 print(f"{bcolors.OKBLUE}W H O A\n.")
@@ -317,7 +318,7 @@ time.sleep(27.55 - 26.55)
 print(".")
 
 time.sleep(28.71 - 27.55)
-print("Uh oh.")
+print("Uh oh.\n")
 
 user_input("take feelings", 31.63 - 28.71, 32.67 - 31.63)
 print("You take his FEELINGS.  I mean, he's a robot, right? They're probably not even real feelings.\n")
@@ -444,17 +445,19 @@ moon_print("                                                                 *  
 moon_print("                    .                                                                                                                   ")
 moon_print("                                                                                                                                        ")
 
+moon_print("                                                                                                                                       ")
+
 time.sleep(10)
 song.pause()
 time.sleep(5)
 
 os.system('clear')
 
-printf("Song and story comes from Johnathan Coulton")
+print("Song and story comes from Johnathan Coulton")
 time.sleep(1)
-printf("Created By: Albert Lee")
+print("Created By: Albert Lee")
 time.sleep(1)
-printf("Thank you for watching!")
+print("Thank you for watching!")
 time.sleep(3)
 
 sys.exit()
